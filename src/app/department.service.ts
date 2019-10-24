@@ -33,4 +33,32 @@ export class DepartmentService {
     );
   }
 
+  del(dep: Department): Observable<any> {
+    return this.http.delete(`${this.url}/${dep._id}`)
+      .pipe(
+        tap(() => {
+          let departments = this.departmentsSubjects$.getValue();
+          let i = departments.findIndex(d => d._id === dep._id);
+          if (i >= 0) {
+            departments.splice(i, 1);
+          }
+        })
+      );
+  }
+
+
+  update(dep: Department): Observable<Department> {
+    return this.http.patch<Department>(`${this.url}/${dep._id}`, dep)
+      .pipe(
+        tap((d) => {
+          let departments = this.departmentsSubjects$.getValue();
+          let i = departments.findIndex(d => d._id === dep._id);
+          if (i > 0) {
+            departments[i].name = d.name;
+          }
+        })
+      );
+  }
+
+
 }
