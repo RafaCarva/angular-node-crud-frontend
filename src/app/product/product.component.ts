@@ -1,11 +1,13 @@
+import { Product } from './../product';
 import { DepartmentService } from './../department.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from '../product.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 import { Product } from '../product';
 import { Department } from '../department';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-product',
@@ -19,7 +21,7 @@ export class ProductComponent implements OnInit {
     name: ['', [Validators.required]],
     stock: [0, [Validators.required, Validators.min(0)]],
     price: [0, [Validators.required, Validators.min(0)]],
-    department: [[], [Validators.required]]
+    departments: [[], [Validators.required]]
   });
 
   products: Product[] = [];
@@ -27,10 +29,13 @@ export class ProductComponent implements OnInit {
 
   private unsubscribe$: Subject<any> = new Subject<any>();
 
+  @ViewChild('form', {static: false}) form: NgForm;
+
   constructor(
     private productService: ProductService,
     private fb: FormBuilder,
-    private departmentService: DepartmentService) { }
+    private departmentService: DepartmentService,
+    private snackbar: MatSnackBar) { }
 
   ngOnInit() {
     this.productService.get()
@@ -47,7 +52,38 @@ export class ProductComponent implements OnInit {
   }
 
   save() {
+    let data = this.productForm.value;
 
+    if (data._id != null) { // Se não existe, é pq ele vai ser criado.
+      this.productService.update(data)
+        .subscribe();
+
+    } else { // Se já existe, é pq ele vai ser editado.
+      this.productService.add(data)
+        .subscribe();
+    }
+
+  }
+
+  delete(p: Product) {
+    this.productService.del(p)
+      .subscribe(
+        () => this.notify('Deleted!'),
+        (err) => console.log(err)
+      );
+  }
+
+  edit(p: Product) {
+    this.productForm.setValue(p);
+  }
+
+  notify(msg: string) {
+    this.snackbar.open(msg, 'OK', {duration: 3000});
+  }
+
+  resetForm() {
+    // this.productForm.reset();
+    this.form.resetForm();
   }
 
 }
