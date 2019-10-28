@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.6.
 
+## Screenshot
+
+![sc](https://user-images.githubusercontent.com/13722768/67678341-24726280-f965-11e9-889b-41abeed6ced9.png)
+
 ## Some tips
 Angular flex-layouts<br>
 https://tburleson-layouts-demos.firebaseapp.com/#/docs

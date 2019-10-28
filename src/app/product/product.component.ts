@@ -3,7 +3,6 @@ import { DepartmentService } from './../department.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from '../product.service';
 import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
-import { Product } from '../product';
 import { Department } from '../department';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
